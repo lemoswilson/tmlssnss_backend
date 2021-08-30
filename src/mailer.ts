@@ -1,18 +1,15 @@
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
-    // service: 'Yahoo',
-    service: 'Hotmail',
+    service: process.env.EMAIL_SERVICE,
     auth: {
-        // user: "lemoswilson@yahoo.com",
-        user: "tmlssnss@outlook.com",
-        pass: '$ine$QUARE420'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     }
 });
 
 export const options = {
-    from: "tmlssnss@outlook.com",
-    // from: "uiubeats@gmail.com",
+    from: process.env.EMAIL_USER,
     to: '',
     subject: "Recover your Tmlssnss password",
     text: '',

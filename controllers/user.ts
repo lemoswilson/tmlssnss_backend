@@ -112,25 +112,42 @@ export async function emailRecoverPassword(req: Request, res: Response): Promise
 			const timeout = Date.now() + (60 * 45 * 1000);
 	
 			if (exist_rec){
-				// await UserRecoverModel.update({user: existence._id}, {password, timeout}, (err, raw) => {checkAndEmail(err, raw, res, existence, password)}).exec()
 				exist_rec.password = password;
 				exist_rec.timeout = timeout
 				exist_rec.save()
-					.then(_ => {
-						checkAndEmail(undefined, undefined, res, existence, password)
-					})
-					.catch(e => {
-						checkAndEmail(e, undefined, res, existence, password)
-					})
+				.then(_ => {
+					checkAndEmail(
+						undefined, 
+						undefined, 
+						res, 
+						existence, 
+						password
+					)
+				})
+				.catch(e => {
+					checkAndEmail(
+						e, 
+						undefined, 
+						res, 
+						existence, 
+						password
+					)
+				})
 			} else {
 				const newUser = new UserRecoverModel({user: existence._id, password, timeout})
 				newUser.save()
-					.then(_ => {
-						checkAndEmail(undefined, undefined, res, existence, password)
-					})
-					.catch(e => {
-						checkAndEmail(e, undefined, res, existence, password)
-					})
+				.then(_ => {
+					checkAndEmail(
+						undefined, 
+						undefined, 
+						res, 
+						existence, 
+						password
+					)
+				})
+				.catch(e => {
+					checkAndEmail(e, undefined, res, existence, password)
+				})
 			}
 		} else {
 			res.status(202).send({error: messages.UNKNOWN_EMAIL})
@@ -174,8 +191,8 @@ export async function resetPassword(req: Request, res: Response): Promise<void> 
 			await UserRecoverModel.deleteOne({user: User?._id}).exec()
 			User.password = password;
 			User?.save()
-				.then(__ => { res.status(200).send({data: 'reseted'}) })
-				.catch(__ => { res.send({error: messages.ERROR_PASSWORD}) })
+			.then(__ => { res.status(200).send({data: 'reseted'}) })
+			.catch(__ => { res.send({error: messages.ERROR_PASSWORD}) })
 		} else {
 			res.send({error: messages.ERROR_PASSWORD})
 		}
@@ -187,17 +204,16 @@ export async function resetPassword(req: Request, res: Response): Promise<void> 
 export async function placeOrder(req: OrderBodyRequest, res: Response): Promise<void> {
 	try {
 		if (req.user) {
-			console.log('user authentified via token, now should be cerating a new order')
+			// user authentified via token, now should be cerating a new order
 			const { submitted_at, total_items, items, orderRef, state } = { ...req.body }
 			const newOrder = new OrdersModel({submitted_at, total_items, items, orderRef, user: req.user._id, state})
 			newOrder.save()
 				.then(order => {
-					console.log('should have created a new order')
+					// console.log('should have created a new order')
 					res.status(200).json({message: `${order.orderRef} registred`});
 				})
 				.catch(e => {
-					console.log('there was an error trying to save the order')
-					console.log(e)
+					// console.log('there was an error trying to save the order')
 					res.json({error: messages.ERROR_SAVING_ORDER
 				})})
 		}
