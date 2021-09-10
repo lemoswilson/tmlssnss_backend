@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/src/index.js",
-    "heroku-postbuild": "tsc && rm -v -rf src"
+    "heroku-postbuild": "tsc"
   },
   "keywords": [],
   "author": "",
