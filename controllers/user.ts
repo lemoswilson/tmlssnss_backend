@@ -212,7 +212,7 @@ export async function placeOrder(req: OrderBodyRequest, res: Response): Promise<
 					// console.log('should have created a new order')
 					res.status(200).json({message: `${order.orderRef} registred`});
 				})
-				.catch(e => {
+				.catch(_ => {
 					// console.log('there was an error trying to save the order')
 					res.json({error: messages.ERROR_SAVING_ORDER
 				})})
