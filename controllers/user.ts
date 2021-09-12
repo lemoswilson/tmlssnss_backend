@@ -59,13 +59,16 @@ export async function signUp(req: UserBodyRequest, res: Response): Promise<void>
 };
 
 export async function signIn(req: Request, res: Response): Promise<void> {
+	console.log('[signIn:user.ts]: should be signing in')
 	try {
 		if (req.user){
+			console.log('[signIn:user.ts]: there s a user, signin in')
 			const token = signToken(req.user);
 			res.status(200).json({token, name: req.user.first_name})
 		}
-	} catch {
-
+		console.log('[signIn:user.ts]: there s  not a user')
+	} catch (e: any) {
+		console.log('[signIn:user.ts]: an error ocurred when trying to signing in', e);
 	}
 }
 

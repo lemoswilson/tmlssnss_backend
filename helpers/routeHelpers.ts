@@ -13,6 +13,7 @@ export enum messages {
 	UNKOWN_USER_PASSWORD = 'The password entered is incorrect',
 	ERROR_SAVING_ORDER = 'There was an error saving the order to users database',
 	ERROR_FETCHING_ORDER = 'There was an error trying to fetch your orders',
+	ERROR_REQUEST = "There was an error processing your request, please try again",
 }
 
 export declare type RecursivePartial<T> = {
@@ -30,8 +31,10 @@ declare module 'express' {
 
 export function validateBody(schema: Joi.ObjectSchema<any>) {
 	return (req: Request, res: Response, next: NextFunction) => {
+		console.log('[validateBody:routeHelpers.ts]: validating body')
 		const validation = schema.validate(req.body);
 		if (validation.error) {
+			console.log('[validateBody:routeHelpers.ts]: validating error')
 			return res.status(400).json({error: validation.error.message})
 		}
 
@@ -56,7 +59,7 @@ export const schemas = {
 		email: Joi.string().email().required(),
 		first_name: Joi.string().required().insensitive(),
 		last_name: Joi.string().required().insensitive(),
-        password: Joi.string().required().regex(/^(?=.{6,16}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/),
+        password: Joi.string().required().regex(/^(?=.{6,32}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/),
 	}),
 	updateSchema: Joi.object().keys({
 		old_password: Joi.string().required().regex(/^(?=.{6,16}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/),
@@ -65,7 +68,7 @@ export const schemas = {
 	}),
 	passSchema: Joi.object().keys({
 		email: Joi.string().email().required(),
-		password: Joi.string().required().regex(/^(?=.{6,16}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/),
+		password: Joi.string().required(),
 	}),
 	resetPassword: Joi.object().keys({
 		email: Joi.string().email().required(),

@@ -36,16 +36,19 @@ passport.use('jwt', new JWTStrategy.Strategy({
 }, JSTStrat))
 
 async function localStrat (username: string, password: string, done: any){
+	console.log('[localStrat:passport.ts]: initializing local strategy')
 	try {
-
 		const user = await UserModel.findOne({ email: username }).exec();
 		if (!user) return done(null, false, { message: messages.UNKNOWN_EMAIL});
 		if (user && await comparePassword(password, user.password))
 			return done(null, user)
-		else 
+		else{
+			console.log('[localStrat:passport.ts]: Invalid username and password combination')
 			return done(null, false, { message: messages.UNKOWN_USER_PASSWORD })
+		} 
 	} catch (error) {
-		return done(error, false)
+		console.log('[localStrat:passport.ts]: inside catching error function')
+		return done(error, false, { message: messages.ERROR_REQUEST })
 	}
 }
 
